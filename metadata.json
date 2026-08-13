@@ -1,0 +1,8 @@
+{
+  "name": "GoTag USD",
+  "description": "GoTag test payment asset for the GoTag smart mobility network.",
+  "image": "ipfs://bafybeif5vapfb6noyaktrq2ewaf7mwqzouacd4goeev5kwnaku4ernyhz4",
+  "image_mimetype": "image/png",
+  "unit_name": "GTUSD",
+  "decimals": 6
+}

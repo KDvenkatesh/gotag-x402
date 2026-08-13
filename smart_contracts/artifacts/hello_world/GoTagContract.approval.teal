@@ -1,0 +1,1343 @@
+#pragma version 11
+#pragma typetrack false
+
+// algopy.arc4.ARC4Contract.approval_program() -> uint64:
+main:
+    intcblock 0 1 2 8
+    bytecblock "admin" "initialized" "settlement_authority" "v:" "ss:" "s:" 0x151f7c75 "payment_asset_id"
+    // smart_contracts/hello_world/contract.py:63
+    // class GoTagContract(ARC4Contract):
+    txn NumAppArgs
+    bz main_create@20
+    txn OnCompletion
+    !
+    assert
+    txn ApplicationID
+    assert
+    pushbytess 0x86e2e303 0xd45d7d09 0xdfc7ae95 0xeac4b881 0xe85861cf 0x6b5b0f99 0xe37356fa 0x78254491 0x9adc607e 0x6acbf8a5 0xe5517601 // method "initialize(uint64,address)void", method "set_settlement_authority(address)void", method "register_vehicle(string,address,uint64)void", method "block_vehicle(string)void", method "register_service(string,address,uint64,uint64)void", method "create_session(string,string,string,uint64)void", method "cancel_session(string)void", method "record_payment(string,string)void", method "get_vehicle(string)(address,uint64,uint64,uint64)", method "get_service(string)(address,uint64,uint64,uint64)", method "get_session(string)(string,string,address,uint64,uint64,string)"
+    txna ApplicationArgs 0
+    match initialize set_settlement_authority register_vehicle block_vehicle register_service create_session cancel_session record_payment get_vehicle get_service get_session
+    err
+
+main_create@20:
+    // smart_contracts/hello_world/contract.py:160-163
+    // @arc4.baremethod(
+    //     allow_actions=["NoOp"],
+    //     create="require",
+    // )
+    txn OnCompletion
+    !
+    txn ApplicationID
+    !
+    &&
+    assert
+    // smart_contracts/hello_world/contract.py:172
+    // self.admin.value = Txn.sender.bytes
+    bytec_0 // "admin"
+    txn Sender
+    app_global_put
+    // smart_contracts/hello_world/contract.py:174
+    // self.settlement_authority.value = Txn.sender.bytes
+    bytec_2 // "settlement_authority"
+    txn Sender
+    app_global_put
+    // smart_contracts/hello_world/contract.py:176
+    // self.payment_asset_id.value = UInt64(0)
+    bytec 7 // "payment_asset_id"
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/hello_world/contract.py:178
+    // self.initialized.value = UInt64(0)
+    bytec_1 // "initialized"
+    intc_0 // 0
+    app_global_put
+    // smart_contracts/hello_world/contract.py:160-163
+    // @arc4.baremethod(
+    //     allow_actions=["NoOp"],
+    //     create="require",
+    // )
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GoTagContract.initialize[routing]() -> void:
+initialize:
+    // smart_contracts/hello_world/contract.py:184
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    txna ApplicationArgs 2
+    dup
+    len
+    pushint 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    // smart_contracts/hello_world/contract.py:204
+    // Txn.sender.bytes == self.admin.value
+    txn Sender
+    intc_0 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    ==
+    // smart_contracts/hello_world/contract.py:203-205
+    // assert (
+    //     Txn.sender.bytes == self.admin.value
+    // ), "Only admin"
+    assert // Only admin
+    // smart_contracts/hello_world/contract.py:208
+    // self.initialized.value == UInt64(0)
+    intc_0 // 0
+    bytec_1 // "initialized"
+    app_global_get_ex
+    assert // check self.initialized exists
+    !
+    // smart_contracts/hello_world/contract.py:207-209
+    // assert (
+    //     self.initialized.value == UInt64(0)
+    // ), "Already initialized"
+    assert // Already initialized
+    // smart_contracts/hello_world/contract.py:212
+    // payment_asset_id.native > UInt64(0)
+    swap
+    btoi
+    // smart_contracts/hello_world/contract.py:211-213
+    // assert (
+    //     payment_asset_id.native > UInt64(0)
+    // ), "Invalid payment asset"
+    dup
+    assert // Invalid payment asset
+    // smart_contracts/hello_world/contract.py:215
+    // self.payment_asset_id.value = (
+    bytec 7 // "payment_asset_id"
+    // smart_contracts/hello_world/contract.py:215-217
+    // self.payment_asset_id.value = (
+    //     payment_asset_id.native
+    // )
+    swap
+    app_global_put
+    // smart_contracts/hello_world/contract.py:219
+    // self.settlement_authority.value = (
+    bytec_2 // "settlement_authority"
+    // smart_contracts/hello_world/contract.py:219-221
+    // self.settlement_authority.value = (
+    //     settlement_authority.native.bytes
+    // )
+    swap
+    app_global_put
+    // smart_contracts/hello_world/contract.py:223
+    // self.initialized.value = UInt64(1)
+    bytec_1 // "initialized"
+    intc_1 // 1
+    app_global_put
+    // smart_contracts/hello_world/contract.py:184
+    // @arc4.abimethod()
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GoTagContract.set_settlement_authority[routing]() -> void:
+set_settlement_authority:
+    // smart_contracts/hello_world/contract.py:229
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    len
+    pushint 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    // smart_contracts/hello_world/contract.py:241
+    // Txn.sender.bytes == self.admin.value
+    txn Sender
+    intc_0 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    ==
+    // smart_contracts/hello_world/contract.py:240-242
+    // assert (
+    //     Txn.sender.bytes == self.admin.value
+    // ), "Only admin"
+    assert // Only admin
+    // smart_contracts/hello_world/contract.py:244
+    // self.settlement_authority.value = (
+    bytec_2 // "settlement_authority"
+    // smart_contracts/hello_world/contract.py:244-246
+    // self.settlement_authority.value = (
+    //     new_authority.native.bytes
+    // )
+    swap
+    app_global_put
+    // smart_contracts/hello_world/contract.py:229
+    // @arc4.abimethod()
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GoTagContract.register_vehicle[routing]() -> void:
+register_vehicle:
+    // smart_contracts/hello_world/contract.py:252
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 2
+    dup
+    len
+    pushint 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 3
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    // smart_contracts/hello_world/contract.py:276
+    // Txn.sender.bytes == self.admin.value
+    txn Sender
+    intc_0 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    ==
+    // smart_contracts/hello_world/contract.py:275-277
+    // assert (
+    //     Txn.sender.bytes == self.admin.value
+    // ), "Only admin"
+    assert // Only admin
+    // smart_contracts/hello_world/contract.py:280
+    // self.initialized.value == UInt64(1)
+    intc_0 // 0
+    bytec_1 // "initialized"
+    app_global_get_ex
+    assert // check self.initialized exists
+    intc_1 // 1
+    ==
+    // smart_contracts/hello_world/contract.py:279-281
+    // assert (
+    //     self.initialized.value == UInt64(1)
+    // ), "Not initialized"
+    assert // Not initialized
+    // smart_contracts/hello_world/contract.py:284
+    // spending_limit.native > UInt64(0)
+    dup
+    btoi
+    // smart_contracts/hello_world/contract.py:283-285
+    // assert (
+    //     spending_limit.native > UInt64(0)
+    // ), "Invalid spending limit"
+    assert // Invalid spending limit
+    // smart_contracts/hello_world/contract.py:291
+    // key not in self.vehicles
+    bytec_3 // "v:"
+    uncover 3
+    concat
+    dup
+    box_len
+    bury 1
+    !
+    // smart_contracts/hello_world/contract.py:290-292
+    // assert (
+    //     key not in self.vehicles
+    // ), "Vehicle already registered"
+    assert // Vehicle already registered
+    // smart_contracts/hello_world/contract.py:296
+    // arc4.UInt64(STATUS_ACTIVE),
+    intc_1 // 1
+    itob
+    // smart_contracts/hello_world/contract.py:298
+    // arc4.UInt64(0),
+    intc_0 // 0
+    itob
+    // smart_contracts/hello_world/contract.py:294-299
+    // record = VehicleRecord(
+    //     owner.copy(),
+    //     arc4.UInt64(STATUS_ACTIVE),
+    //     spending_limit,
+    //     arc4.UInt64(0),
+    // )
+    uncover 4
+    uncover 2
+    concat
+    uncover 3
+    concat
+    swap
+    concat
+    // smart_contracts/hello_world/contract.py:301
+    // self.vehicles[key] = record.copy()
+    box_put
+    // smart_contracts/hello_world/contract.py:252
+    // @arc4.abimethod()
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GoTagContract.block_vehicle[routing]() -> void:
+block_vehicle:
+    // smart_contracts/hello_world/contract.py:307
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    // smart_contracts/hello_world/contract.py:321
+    // Txn.sender.bytes == self.admin.value
+    txn Sender
+    intc_0 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    ==
+    // smart_contracts/hello_world/contract.py:320-322
+    // assert (
+    //     Txn.sender.bytes == self.admin.value
+    // ), "Only admin"
+    assert // Only admin
+    // smart_contracts/hello_world/contract.py:327
+    // key in self.vehicles
+    bytec_3 // "v:"
+    swap
+    concat
+    dup
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:326-328
+    // assert (
+    //     key in self.vehicles
+    // ), "Vehicle not found"
+    assert // Vehicle not found
+    // smart_contracts/hello_world/contract.py:330
+    // vehicle = self.vehicles[key].copy()
+    dup
+    box_get
+    pop
+    // smart_contracts/hello_world/contract.py:333
+    // vehicle.status.native
+    pushint 32
+    extract_uint64
+    // smart_contracts/hello_world/contract.py:334
+    // != UInt64(STATUS_BLOCKED)
+    intc_2 // 2
+    // smart_contracts/hello_world/contract.py:333-334
+    // vehicle.status.native
+    // != UInt64(STATUS_BLOCKED)
+    !=
+    // smart_contracts/hello_world/contract.py:332-335
+    // assert (
+    //     vehicle.status.native
+    //     != UInt64(STATUS_BLOCKED)
+    // ), "Already blocked"
+    assert // Already blocked
+    // smart_contracts/hello_world/contract.py:337-339
+    // vehicle.status = arc4.UInt64(
+    //     STATUS_BLOCKED
+    // )
+    intc_2 // 2
+    itob
+    pushint 32
+    swap
+    box_replace // on error: index out of bounds
+    // smart_contracts/hello_world/contract.py:307
+    // @arc4.abimethod()
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GoTagContract.register_service[routing]() -> void:
+register_service:
+    // smart_contracts/hello_world/contract.py:347
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 2
+    dup
+    len
+    pushint 32
+    ==
+    assert // invalid number of bytes for arc4.static_array<arc4.uint8, 32>
+    txna ApplicationArgs 3
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    txna ApplicationArgs 4
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    // smart_contracts/hello_world/contract.py:383
+    // Txn.sender.bytes == self.admin.value
+    txn Sender
+    intc_0 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    ==
+    // smart_contracts/hello_world/contract.py:382-384
+    // assert (
+    //     Txn.sender.bytes == self.admin.value
+    // ), "Only admin"
+    assert // Only admin
+    // smart_contracts/hello_world/contract.py:387
+    // self.initialized.value == UInt64(1)
+    intc_0 // 0
+    bytec_1 // "initialized"
+    app_global_get_ex
+    assert // check self.initialized exists
+    intc_1 // 1
+    ==
+    // smart_contracts/hello_world/contract.py:386-388
+    // assert (
+    //     self.initialized.value == UInt64(1)
+    // ), "Not initialized"
+    assert // Not initialized
+    // smart_contracts/hello_world/contract.py:391
+    // service_type.native >= UInt64(1)
+    dig 1
+    btoi
+    // smart_contracts/hello_world/contract.py:390-392
+    // assert (
+    //     service_type.native >= UInt64(1)
+    // ), "Invalid service type"
+    dup
+    assert // Invalid service type
+    // smart_contracts/hello_world/contract.py:395
+    // service_type.native <= UInt64(4)
+    pushint 4
+    <=
+    // smart_contracts/hello_world/contract.py:394-396
+    // assert (
+    //     service_type.native <= UInt64(4)
+    // ), "Invalid service type"
+    assert // Invalid service type
+    // smart_contracts/hello_world/contract.py:399
+    // price_per_unit.native > UInt64(0)
+    dup
+    btoi
+    // smart_contracts/hello_world/contract.py:398-400
+    // assert (
+    //     price_per_unit.native > UInt64(0)
+    // ), "Invalid price"
+    assert // Invalid price
+    // smart_contracts/hello_world/contract.py:405
+    // key not in self.services
+    bytec 5 // "s:"
+    uncover 4
+    concat
+    dup
+    box_len
+    bury 1
+    !
+    // smart_contracts/hello_world/contract.py:404-406
+    // assert (
+    //     key not in self.services
+    // ), "Service already registered"
+    assert // Service already registered
+    // smart_contracts/hello_world/contract.py:411
+    // arc4.UInt64(STATUS_ACTIVE),
+    intc_1 // 1
+    itob
+    // smart_contracts/hello_world/contract.py:408-413
+    // record = ServiceRecord(
+    //     provider.copy(),
+    //     service_type,
+    //     arc4.UInt64(STATUS_ACTIVE),
+    //     price_per_unit,
+    // )
+    uncover 4
+    uncover 4
+    concat
+    swap
+    concat
+    uncover 2
+    concat
+    // smart_contracts/hello_world/contract.py:415
+    // self.services[key] = record.copy()
+    box_put
+    // smart_contracts/hello_world/contract.py:347
+    // @arc4.abimethod()
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GoTagContract.create_session[routing]() -> void:
+create_session:
+    // smart_contracts/hello_world/contract.py:421
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 2
+    dup
+    cover 2
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    dup
+    cover 4
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 3
+    dup
+    cover 3
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    swap
+    len
+    dup
+    cover 5
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 4
+    dup
+    cover 4
+    dup
+    len
+    intc_3 // 8
+    ==
+    assert // invalid number of bytes for arc4.uint64
+    // smart_contracts/hello_world/contract.py:451
+    // self.initialized.value == UInt64(1)
+    intc_0 // 0
+    bytec_1 // "initialized"
+    app_global_get_ex
+    assert // check self.initialized exists
+    intc_1 // 1
+    ==
+    // smart_contracts/hello_world/contract.py:450-452
+    // assert (
+    //     self.initialized.value == UInt64(1)
+    // ), "Not initialized"
+    assert // Not initialized
+    // smart_contracts/hello_world/contract.py:455
+    // amount.native > UInt64(0)
+    btoi
+    dup
+    cover 3
+    // smart_contracts/hello_world/contract.py:454-456
+    // assert (
+    //     amount.native > UInt64(0)
+    // ), "Invalid amount"
+    assert // Invalid amount
+    // smart_contracts/hello_world/contract.py:465
+    // session_key not in self.sessions
+    bytec 4 // "ss:"
+    uncover 2
+    concat
+    dup
+    cover 4
+    box_len
+    bury 1
+    !
+    // smart_contracts/hello_world/contract.py:464-466
+    // assert (
+    //     session_key not in self.sessions
+    // ), "Session already exists"
+    assert // Session already exists
+    // smart_contracts/hello_world/contract.py:475
+    // vehicle_key in self.vehicles
+    bytec_3 // "v:"
+    swap
+    concat
+    dup
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:474-476
+    // assert (
+    //     vehicle_key in self.vehicles
+    // ), "Vehicle not found"
+    assert // Vehicle not found
+    // smart_contracts/hello_world/contract.py:478-480
+    // vehicle = self.vehicles[
+    //     vehicle_key
+    // ].copy()
+    box_get
+    pop
+    dupn 2
+    // smart_contracts/hello_world/contract.py:483
+    // vehicle.status.native
+    pushint 32
+    extract_uint64
+    // smart_contracts/hello_world/contract.py:484
+    // == UInt64(STATUS_ACTIVE)
+    intc_1 // 1
+    // smart_contracts/hello_world/contract.py:483-484
+    // vehicle.status.native
+    // == UInt64(STATUS_ACTIVE)
+    ==
+    // smart_contracts/hello_world/contract.py:482-485
+    // assert (
+    //     vehicle.status.native
+    //     == UInt64(STATUS_ACTIVE)
+    // ), "Vehicle not active"
+    assert // Vehicle not active
+    // smart_contracts/hello_world/contract.py:492
+    // Txn.sender.bytes
+    txn Sender
+    // smart_contracts/hello_world/contract.py:493
+    // == vehicle.owner.native.bytes
+    swap
+    extract 0 32
+    // smart_contracts/hello_world/contract.py:492-493
+    // Txn.sender.bytes
+    // == vehicle.owner.native.bytes
+    ==
+    // smart_contracts/hello_world/contract.py:497
+    // Txn.sender.bytes
+    txn Sender
+    // smart_contracts/hello_world/contract.py:498
+    // == self.admin.value
+    intc_0 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    // smart_contracts/hello_world/contract.py:497-498
+    // Txn.sender.bytes
+    // == self.admin.value
+    ==
+    cover 9
+    // smart_contracts/hello_world/contract.py:502
+    // Txn.sender.bytes
+    txn Sender
+    // smart_contracts/hello_world/contract.py:503
+    // == self.settlement_authority.value
+    intc_0 // 0
+    bytec_2 // "settlement_authority"
+    app_global_get_ex
+    assert // check self.settlement_authority exists
+    // smart_contracts/hello_world/contract.py:502-503
+    // Txn.sender.bytes
+    // == self.settlement_authority.value
+    ==
+    cover 9
+    // smart_contracts/hello_world/contract.py:507-509
+    // is_owner
+    // or is_admin
+    // or is_settlement_authority
+    bnz create_session_bool_true@4
+    dig 9
+    bnz create_session_bool_true@4
+    dig 8
+    bz create_session_bool_false@5
+
+create_session_bool_true@4:
+    intc_1 // 1
+
+create_session_bool_merge@6:
+    // smart_contracts/hello_world/contract.py:506-510
+    // assert (
+    //     is_owner
+    //     or is_admin
+    //     or is_settlement_authority
+    // ), "Unauthorized vehicle"
+    assert // Unauthorized vehicle
+    // smart_contracts/hello_world/contract.py:519
+    // service_key in self.services
+    bytec 5 // "s:"
+    uncover 3
+    dup
+    cover 2
+    concat
+    dup
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:518-520
+    // assert (
+    //     service_key in self.services
+    // ), "Service not found"
+    assert // Service not found
+    // smart_contracts/hello_world/contract.py:522-524
+    // service = self.services[
+    //     service_key
+    // ].copy()
+    box_get
+    pop
+    // smart_contracts/hello_world/contract.py:527
+    // service.status.native
+    pushint 40
+    extract_uint64
+    // smart_contracts/hello_world/contract.py:528
+    // == UInt64(STATUS_ACTIVE)
+    intc_1 // 1
+    // smart_contracts/hello_world/contract.py:527-528
+    // service.status.native
+    // == UInt64(STATUS_ACTIVE)
+    ==
+    // smart_contracts/hello_world/contract.py:526-529
+    // assert (
+    //     service.status.native
+    //     == UInt64(STATUS_ACTIVE)
+    // ), "Service not active"
+    assert // Service not active
+    // smart_contracts/hello_world/contract.py:536
+    // vehicle.spending_limit.native
+    swap
+    dup
+    pushint 40
+    extract_uint64
+    // smart_contracts/hello_world/contract.py:537
+    // - vehicle.spent_amount.native
+    swap
+    pushint 48
+    extract_uint64
+    // smart_contracts/hello_world/contract.py:536-537
+    // vehicle.spending_limit.native
+    // - vehicle.spent_amount.native
+    -
+    // smart_contracts/hello_world/contract.py:541
+    // amount.native <= remaining_limit
+    uncover 2
+    >=
+    // smart_contracts/hello_world/contract.py:540-542
+    // assert (
+    //     amount.native <= remaining_limit
+    // ), "Spending limit exceeded"
+    assert // Spending limit exceeded
+    // smart_contracts/hello_world/contract.py:551
+    // arc4.Address(Txn.sender),
+    txn Sender
+    // smart_contracts/hello_world/contract.py:552
+    // arc4.UInt64(SESSION_PENDING),
+    intc_1 // 1
+    itob
+    // smart_contracts/hello_world/contract.py:548-555
+    // record = SessionRecord(
+    //     gotag_id,
+    //     service_id,
+    //     arc4.Address(Txn.sender),
+    //     arc4.UInt64(SESSION_PENDING),
+    //     amount,
+    //     arc4.String(""),
+    // )
+    pushint 54
+    uncover 7
+    +
+    dup
+    itob
+    extract 6 2
+    pushbytes 0x0036
+    swap
+    concat
+    swap
+    uncover 7
+    +
+    swap
+    uncover 3
+    concat
+    uncover 2
+    concat
+    uncover 4
+    concat
+    swap
+    itob
+    extract 6 2
+    concat
+    uncover 3
+    concat
+    swap
+    concat
+    // smart_contracts/hello_world/contract.py:554
+    // arc4.String(""),
+    pushbytes 0x0000
+    // smart_contracts/hello_world/contract.py:548-555
+    // record = SessionRecord(
+    //     gotag_id,
+    //     service_id,
+    //     arc4.Address(Txn.sender),
+    //     arc4.UInt64(SESSION_PENDING),
+    //     amount,
+    //     arc4.String(""),
+    // )
+    concat
+    // smart_contracts/hello_world/contract.py:557-559
+    // self.sessions[
+    //     session_key
+    // ] = record.copy()
+    swap
+    dup
+    box_del
+    pop
+    swap
+    box_put
+    // smart_contracts/hello_world/contract.py:421
+    // @arc4.abimethod()
+    intc_1 // 1
+    return
+
+create_session_bool_false@5:
+    intc_0 // 0
+    b create_session_bool_merge@6
+
+
+// smart_contracts.hello_world.contract.GoTagContract.cancel_session[routing]() -> void:
+cancel_session:
+    // smart_contracts/hello_world/contract.py:565
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    // smart_contracts/hello_world/contract.py:583
+    // session_key in self.sessions
+    bytec 4 // "ss:"
+    swap
+    concat
+    dupn 2
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:582-584
+    // assert (
+    //     session_key in self.sessions
+    // ), "Session not found"
+    assert // Session not found
+    // smart_contracts/hello_world/contract.py:591
+    // session.status.native
+    dup
+    pushint 36
+    intc_3 // 8
+    box_extract // on error: index out of bounds
+    btoi
+    // smart_contracts/hello_world/contract.py:592
+    // == UInt64(SESSION_PENDING)
+    intc_1 // 1
+    // smart_contracts/hello_world/contract.py:591-592
+    // session.status.native
+    // == UInt64(SESSION_PENDING)
+    ==
+    // smart_contracts/hello_world/contract.py:590-593
+    // assert (
+    //     session.status.native
+    //     == UInt64(SESSION_PENDING)
+    // ), "Session is not pending"
+    assert // Session is not pending
+    // smart_contracts/hello_world/contract.py:599
+    // vehicle_key = session.gotag_id.bytes
+    dup
+    pushint 54
+    intc_2 // 2
+    box_extract
+    btoi
+    intc_2 // 2
+    +
+    pushint 54
+    swap
+    box_extract
+    // smart_contracts/hello_world/contract.py:602
+    // vehicle_key in self.vehicles
+    bytec_3 // "v:"
+    swap
+    concat
+    dup
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:601-603
+    // assert (
+    //     vehicle_key in self.vehicles
+    // ), "Vehicle not found"
+    assert // Vehicle not found
+    // smart_contracts/hello_world/contract.py:605-607
+    // vehicle = self.vehicles[
+    //     vehicle_key
+    // ].copy()
+    box_get
+    pop
+    // smart_contracts/hello_world/contract.py:614
+    // Txn.sender.bytes
+    txn Sender
+    // smart_contracts/hello_world/contract.py:615
+    // == vehicle.owner.native.bytes
+    swap
+    extract 0 32
+    // smart_contracts/hello_world/contract.py:614-615
+    // Txn.sender.bytes
+    // == vehicle.owner.native.bytes
+    ==
+    // smart_contracts/hello_world/contract.py:619
+    // Txn.sender.bytes
+    txn Sender
+    // smart_contracts/hello_world/contract.py:620
+    // == self.admin.value
+    intc_0 // 0
+    bytec_0 // "admin"
+    app_global_get_ex
+    assert // check self.admin exists
+    // smart_contracts/hello_world/contract.py:619-620
+    // Txn.sender.bytes
+    // == self.admin.value
+    ==
+    cover 2
+    // smart_contracts/hello_world/contract.py:624
+    // Txn.sender.bytes
+    txn Sender
+    // smart_contracts/hello_world/contract.py:625
+    // == self.settlement_authority.value
+    intc_0 // 0
+    bytec_2 // "settlement_authority"
+    app_global_get_ex
+    assert // check self.settlement_authority exists
+    // smart_contracts/hello_world/contract.py:624-625
+    // Txn.sender.bytes
+    // == self.settlement_authority.value
+    ==
+    cover 2
+    // smart_contracts/hello_world/contract.py:629-631
+    // is_owner
+    // or is_admin
+    // or is_settlement_authority
+    bnz cancel_session_bool_true@4
+    dig 2
+    bnz cancel_session_bool_true@4
+    dig 1
+    bz cancel_session_bool_false@5
+
+cancel_session_bool_true@4:
+    intc_1 // 1
+
+cancel_session_bool_merge@6:
+    // smart_contracts/hello_world/contract.py:628-632
+    // assert (
+    //     is_owner
+    //     or is_admin
+    //     or is_settlement_authority
+    // ), "Unauthorized"
+    assert // Unauthorized
+    // smart_contracts/hello_world/contract.py:638-640
+    // session.status = arc4.UInt64(
+    //     SESSION_CANCELLED
+    // )
+    pushint 3
+    itob
+    pushint 36
+    swap
+    box_replace // on error: index out of bounds
+    // smart_contracts/hello_world/contract.py:565
+    // @arc4.abimethod()
+    intc_1 // 1
+    return
+
+cancel_session_bool_false@5:
+    intc_0 // 0
+    b cancel_session_bool_merge@6
+
+
+// smart_contracts.hello_world.contract.GoTagContract.record_payment[routing]() -> void:
+record_payment:
+    // smart_contracts/hello_world/contract.py:650
+    // @arc4.abimethod()
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    txna ApplicationArgs 2
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    dup
+    uncover 2
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    // smart_contracts/hello_world/contract.py:676
+    // Txn.sender.bytes
+    txn Sender
+    // smart_contracts/hello_world/contract.py:677
+    // == self.settlement_authority.value
+    intc_0 // 0
+    bytec_2 // "settlement_authority"
+    app_global_get_ex
+    assert // check self.settlement_authority exists
+    // smart_contracts/hello_world/contract.py:676-677
+    // Txn.sender.bytes
+    // == self.settlement_authority.value
+    ==
+    // smart_contracts/hello_world/contract.py:675-678
+    // assert (
+    //     Txn.sender.bytes
+    //     == self.settlement_authority.value
+    // ), "Only settlement authority"
+    assert // Only settlement authority
+    // smart_contracts/hello_world/contract.py:681
+    // self.initialized.value == UInt64(1)
+    intc_0 // 0
+    bytec_1 // "initialized"
+    app_global_get_ex
+    assert // check self.initialized exists
+    intc_1 // 1
+    ==
+    // smart_contracts/hello_world/contract.py:680-682
+    // assert (
+    //     self.initialized.value == UInt64(1)
+    // ), "Not initialized"
+    assert // Not initialized
+    // smart_contracts/hello_world/contract.py:691
+    // session_key in self.sessions
+    bytec 4 // "ss:"
+    uncover 3
+    concat
+    dup
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:690-692
+    // assert (
+    //     session_key in self.sessions
+    // ), "Session not found"
+    assert // Session not found
+    // smart_contracts/hello_world/contract.py:694-696
+    // session = self.sessions[
+    //     session_key
+    // ].copy()
+    dup
+    box_get
+    pop
+    cover 2
+    // smart_contracts/hello_world/contract.py:703
+    // session.status.native
+    dup
+    pushint 36
+    intc_3 // 8
+    box_extract // on error: index out of bounds
+    btoi
+    // smart_contracts/hello_world/contract.py:704
+    // == UInt64(SESSION_PENDING)
+    intc_1 // 1
+    // smart_contracts/hello_world/contract.py:703-704
+    // session.status.native
+    // == UInt64(SESSION_PENDING)
+    ==
+    // smart_contracts/hello_world/contract.py:702-705
+    // assert (
+    //     session.status.native
+    //     == UInt64(SESSION_PENDING)
+    // ), "Session already processed"
+    assert // Session already processed
+    // smart_contracts/hello_world/contract.py:711-714
+    // assert (
+    //     payment_ref.bytes.length
+    //     > UInt64(0)
+    // ), "Payment reference required"
+    swap
+    assert // Payment reference required
+    // smart_contracts/hello_world/contract.py:720
+    // vehicle_key = session.gotag_id.bytes
+    dup
+    pushint 54
+    intc_2 // 2
+    box_extract
+    btoi
+    intc_2 // 2
+    +
+    dig 1
+    pushint 54
+    uncover 2
+    box_extract
+    // smart_contracts/hello_world/contract.py:723
+    // vehicle_key in self.vehicles
+    bytec_3 // "v:"
+    swap
+    concat
+    dup
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:722-724
+    // assert (
+    //     vehicle_key in self.vehicles
+    // ), "Vehicle not found"
+    assert // Vehicle not found
+    // smart_contracts/hello_world/contract.py:726-728
+    // vehicle = self.vehicles[
+    //     vehicle_key
+    // ].copy()
+    dup
+    box_get
+    pop
+    // smart_contracts/hello_world/contract.py:731
+    // vehicle.status.native
+    dup
+    pushint 32
+    extract_uint64
+    // smart_contracts/hello_world/contract.py:732
+    // == UInt64(STATUS_ACTIVE)
+    intc_1 // 1
+    // smart_contracts/hello_world/contract.py:731-732
+    // vehicle.status.native
+    // == UInt64(STATUS_ACTIVE)
+    ==
+    // smart_contracts/hello_world/contract.py:730-733
+    // assert (
+    //     vehicle.status.native
+    //     == UInt64(STATUS_ACTIVE)
+    // ), "Vehicle not active"
+    assert // Vehicle not active
+    // smart_contracts/hello_world/contract.py:740
+    // vehicle.spent_amount.native
+    dup
+    pushint 48
+    extract_uint64
+    // smart_contracts/hello_world/contract.py:741
+    // + session.amount.native
+    dig 3
+    pushint 44
+    intc_3 // 8
+    box_extract // on error: index out of bounds
+    btoi
+    // smart_contracts/hello_world/contract.py:740-741
+    // vehicle.spent_amount.native
+    // + session.amount.native
+    +
+    // smart_contracts/hello_world/contract.py:746
+    // <= vehicle.spending_limit.native
+    swap
+    pushint 40
+    extract_uint64
+    // smart_contracts/hello_world/contract.py:745-746
+    // new_spent
+    // <= vehicle.spending_limit.native
+    dig 1
+    >=
+    // smart_contracts/hello_world/contract.py:744-747
+    // assert (
+    //     new_spent
+    //     <= vehicle.spending_limit.native
+    // ), "Spending limit exceeded"
+    assert // Spending limit exceeded
+    // smart_contracts/hello_world/contract.py:753-755
+    // vehicle.spent_amount = arc4.UInt64(
+    //     new_spent
+    // )
+    itob
+    pushint 48
+    swap
+    box_replace // on error: index out of bounds
+    // smart_contracts/hello_world/contract.py:765-767
+    // session.status = arc4.UInt64(
+    //     SESSION_COMPLETED
+    // )
+    intc_2 // 2
+    itob
+    uncover 2
+    swap
+    replace2 36
+    // smart_contracts/hello_world/contract.py:769-773
+    // # IMPORTANT:
+    // # payment_ref is an ABI String input.
+    // # Do NOT call .copy() here because PuyaPy 5.9.0
+    // # reports that arc4.String has no copy attribute.
+    // session.payment_ref = payment_ref
+    dup
+    pushint 52
+    extract_uint16
+    intc_0 // 0
+    swap
+    extract3
+    uncover 2
+    concat
+    // smart_contracts/hello_world/contract.py:775-777
+    // self.sessions[
+    //     session_key
+    // ] = session.copy()
+    dig 1
+    box_del
+    pop
+    box_put
+    // smart_contracts/hello_world/contract.py:650
+    // @arc4.abimethod()
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GoTagContract.get_vehicle[routing]() -> void:
+get_vehicle:
+    // smart_contracts/hello_world/contract.py:783-785
+    // @arc4.abimethod(
+    //     readonly=True
+    // )
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    // smart_contracts/hello_world/contract.py:794
+    // key in self.vehicles
+    bytec_3 // "v:"
+    swap
+    concat
+    dup
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:793-795
+    // assert (
+    //     key in self.vehicles
+    // ), "Vehicle not found"
+    assert // Vehicle not found
+    // smart_contracts/hello_world/contract.py:797-799
+    // return self.vehicles[
+    //     key
+    // ].copy()
+    box_get
+    pop
+    // smart_contracts/hello_world/contract.py:783-785
+    // @arc4.abimethod(
+    //     readonly=True
+    // )
+    bytec 6 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GoTagContract.get_service[routing]() -> void:
+get_service:
+    // smart_contracts/hello_world/contract.py:805-807
+    // @arc4.abimethod(
+    //     readonly=True
+    // )
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    // smart_contracts/hello_world/contract.py:816
+    // key in self.services
+    bytec 5 // "s:"
+    swap
+    concat
+    dup
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:815-817
+    // assert (
+    //     key in self.services
+    // ), "Service not found"
+    assert // Service not found
+    // smart_contracts/hello_world/contract.py:819-821
+    // return self.services[
+    //     key
+    // ].copy()
+    box_get
+    pop
+    // smart_contracts/hello_world/contract.py:805-807
+    // @arc4.abimethod(
+    //     readonly=True
+    // )
+    bytec 6 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
+
+
+// smart_contracts.hello_world.contract.GoTagContract.get_session[routing]() -> void:
+get_session:
+    // smart_contracts/hello_world/contract.py:827-829
+    // @arc4.abimethod(
+    //     readonly=True
+    // )
+    txna ApplicationArgs 1
+    dup
+    intc_0 // 0
+    extract_uint16 // on error: invalid array length header
+    intc_2 // 2
+    +
+    dig 1
+    len
+    ==
+    assert // invalid number of bytes for arc4.dynamic_array<arc4.uint8>
+    // smart_contracts/hello_world/contract.py:838
+    // key in self.sessions
+    bytec 4 // "ss:"
+    swap
+    concat
+    dup
+    box_len
+    bury 1
+    // smart_contracts/hello_world/contract.py:837-839
+    // assert (
+    //     key in self.sessions
+    // ), "Session not found"
+    assert // Session not found
+    // smart_contracts/hello_world/contract.py:841-843
+    // return self.sessions[
+    //     key
+    // ].copy()
+    box_get
+    pop
+    // smart_contracts/hello_world/contract.py:827-829
+    // @arc4.abimethod(
+    //     readonly=True
+    // )
+    bytec 6 // 0x151f7c75
+    swap
+    concat
+    log
+    intc_1 // 1
+    return
