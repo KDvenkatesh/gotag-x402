@@ -247,27 +247,44 @@ async function signGtusdTransfer(
     note,
   });
 
-  const signedTxns = await wc.signTransaction([
-    [
-      {
-        txn,
-        signers: [sender],
-      },
-    ],
-  ]);
+  let signedTxns: Uint8Array[];
+  try {
+    signedTxns = await wc.signTransaction([
+      [
+        {
+          txn,
+          signers: [sender],
+        },
+      ],
+    ]);
+  } catch (err: any) {
+    console.error('Pera Wallet signTransaction error:', err);
+    throw new Error(err?.message || 'Transaction was cancelled or rejected in Pera Wallet.');
+  }
 
   if (!signedTxns || signedTxns.length === 0) {
     throw new Error('Transaction was cancelled or rejected in Pera Wallet.');
   }
 
-  const sendResult = await algodClient.sendRawTransaction(signedTxns[0]).do();
-  const txId = (sendResult as { txid: string; txId?: string }).txid || (sendResult as { txid: string; txId?: string }).txId;
-
-  if (!txId) {
-    throw new Error('Failed to obtain Algorand transaction ID after broadcasting.');
+  let txId: string;
+  try {
+    const sendResult = await algodClient.sendRawTransaction(signedTxns[0]).do();
+    txId = (sendResult as { txid: string; txId?: string }).txid || (sendResult as { txid: string; txId?: string }).txId;
+    if (!txId) {
+      throw new Error('Failed to obtain Algorand transaction ID after broadcasting.');
+    }
+    await algosdk.waitForConfirmation(algodClient, txId, 4);
+  } catch (err: any) {
+    console.error('Algorand broadcast error:', err);
+    const msg = err?.message || err?.toString() || '';
+    if (msg.includes('asset') && (msg.includes('missing') || msg.includes('opt') || msg.includes('not found') || msg.includes('has not'))) {
+      throw new Error(`Your wallet (${shortAddress(senderAddress)}) has not opted into GTUSD Asset #${gtusdAssetId} on Algorand TestNet. Please opt-in to Asset #${gtusdAssetId} or top up GTUSD.`);
+    }
+    if (msg.includes('underfunded') || msg.includes('overspend') || msg.includes('below min')) {
+      throw new Error(`Insufficient GTUSD or ALGO balance in your wallet to cover the transaction fee.`);
+    }
+    throw new Error(`Algorand TestNet broadcast error: ${msg}`);
   }
-
-  await algosdk.waitForConfirmation(algodClient, txId, 4);
 
   return {
     tx_id: txId,
