@@ -8,7 +8,8 @@ load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 APP_ENV = os.getenv("APP_ENV", "development")
 DEMO_MODE = os.getenv("BACKEND_DEMO_MODE", "true").lower() == "true"
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./gotag.db")
+db_default = "sqlite:////tmp/gotag.db" if os.getenv("VERCEL") else "sqlite:///./gotag.db"
+DATABASE_URL = os.getenv("DATABASE_URL", db_default)
 
 GOTAG_APP_ID = int(os.getenv("GOTAG_APP_ID", "769016959"))
 GOTAG_PAYMENT_ASSET_ID = int(os.getenv("GOTAG_PAYMENT_ASSET_ID", "769016907"))

@@ -3137,7 +3137,15 @@ function AppShell() {
     setIdentityRegistered(null);
 
     fetch(`${API_BASE}/api/vehicles/by-wallet/${address}`)
-      .then((res) => (res.ok ? res.json() : { registered: false }))
+      .then(async (res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        if (res.status === 404) {
+          return { registered: false };
+        }
+        throw new Error(`Server returned HTTP ${res.status}`);
+      })
       .then((data) => {
         console.log('WALLET IDENTITY RESULT', {
           registered: data.registered,
@@ -3158,9 +3166,10 @@ function AppShell() {
         }
       })
       .catch((err) => {
-        console.error('Wallet identity lookup error', err);
+        console.error('Wallet identity lookup error (network/server issue)', err);
+        setWalletError(`Backend API connection error (${API_BASE}): ${err.message || 'Failed to fetch'}`);
         setWalletVehicle(null);
-        setIdentityRegistered(false);
+        setIdentityRegistered(null);
         setWalletBalance(0);
       });
 

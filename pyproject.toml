@@ -1,25 +1,22 @@
-[tool.poetry]
+[project]
 name = "gotag"
 version = "0.1.0"
 description = "GoTag x402 vehicle payment network"
-authors = ["K DHANU VENKATESH <venkyktmkid@gmail.com>"]
 readme = "README.md"
-package-mode = false
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "py-algorand-sdk>=2.7.0",
+    "algokit-utils>=4.0.0",
+    "python-dotenv>=1.0.0",
+    "sqlalchemy>=2.0.0",
+    "pydantic>=2.0.0",
+]
 
-[tool.poetry.dependencies]
-python = "^3.12"
-algokit-utils = "^4.0.0"
-python-dotenv = "^1.0.0"
-algorand-python = "^3"
-fastapi = "^0.115.0"
-uvicorn = "^0.30.0"
-sqlalchemy = "^2.0.0"
-
-[tool.poetry.group.dev.dependencies]
-algokit-client-generator = "^2.1.0"
-puyapy = "*"
-pytest = "^8.3.0"
+[tool.setuptools]
+packages = ["backend", "api"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

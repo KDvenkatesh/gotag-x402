@@ -15,6 +15,7 @@ from sqlalchemy.orm import Session
 
 from backend.config import (
     DEMO_MODE,
+    FRONTEND_URL,
     GOTAG_APP_ID,
     GOTAG_PAYMENT_ASSET_ID,
     SETTLEMENT_AUTHORITY,
@@ -37,21 +38,20 @@ from backend.services.x402_service import (
 )
 
 app = FastAPI(title="GoTag API", version="1.0.0")
+origins = [
+    "http://127.0.0.1:5173",
+    "http://localhost:5173",
+]
+if FRONTEND_URL and FRONTEND_URL not in origins:
+    origins.append(FRONTEND_URL)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://127.0.0.1:5173",
-        "http://localhost:5173",
-    ],
+    allow_origins=["*"] if FRONTEND_URL == "*" else origins,
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-    allow_headers=[
-        "Authorization",
-        "Content-Type",
-        "Accept",
-        "Origin",
-        "X-Requested-With",
-    ],
+    allow_methods=["*"],
+    allow_headers=["*"],
     expose_headers=["Content-Type", "Authorization"],
 )
 
