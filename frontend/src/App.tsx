@@ -221,7 +221,8 @@ async function signGtusdTransfer(
   settlementAuthority: string = DEFAULT_SETTLEMENT_AUTHORITY,
   gtusdAssetId: number = DEFAULT_GTUSD_ASSET_ID,
 ): Promise<{ tx_id: string; sender: string; receiver: string; amount: number; asset_id: number }> {
-  if (!walletConnect) {
+  const wc = walletConnect;
+  if (!wc) {
     throw new Error('Pera Wallet is not available.');
   }
 
@@ -231,7 +232,7 @@ async function signGtusdTransfer(
   const algodClient = new algosdk.Algodv2('', ALGOD_SERVER, '');
   const params = await algodClient.getTransactionParams().do();
 
-  const note = new Uint8Array(Buffer.from(noteText || 'GoTag Payment'));
+  const note = new TextEncoder().encode(noteText || 'GoTag Payment');
 
   const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
     sender: sender,
@@ -242,7 +243,7 @@ async function signGtusdTransfer(
     note,
   });
 
-  const signedTxns = await walletConnect.signTransaction([
+  const signedTxns = await wc.signTransaction([
     [
       {
         txn,
@@ -256,7 +257,7 @@ async function signGtusdTransfer(
   }
 
   const sendResult = await algodClient.sendRawTransaction(signedTxns[0]).do();
-  const txId = sendResult.txId || sendResult.txid;
+  const txId = (sendResult as { txid: string; txId?: string }).txid || (sendResult as { txid: string; txId?: string }).txId;
 
   if (!txId) {
     throw new Error('Failed to obtain Algorand transaction ID after broadcasting.');
@@ -3189,10 +3190,11 @@ function AppShell() {
   }, []);
 
   useEffect(() => {
-    if (!walletConnect) return;
+    const wc = walletConnect;
+    if (!wc) return;
     async function reconnectWallet() {
       try {
-        const accounts = await walletConnect.reconnectSession();
+        const accounts = await wc.reconnectSession();
         if (accounts && accounts.length > 0) {
           const addr = ensureAlgorandAddress(accounts[0], 'Connected wallet');
           setWalletAddress(addr);
@@ -3206,7 +3208,8 @@ function AppShell() {
   }, []);
 
   async function connectWallet() {
-    if (!walletConnect) {
+    const wc = walletConnect;
+    if (!wc) {
       setWalletError('Pera Wallet is not available in this browser.');
       return;
     }
@@ -3215,7 +3218,7 @@ function AppShell() {
     setWalletError('');
 
     try {
-      const accounts = await walletConnect.connect();
+      const accounts = await wc.connect();
       if (!accounts || accounts.length === 0) {
         setWalletError('Wallet connection was cancelled.');
         return;
@@ -3238,9 +3241,10 @@ function AppShell() {
   }
 
   async function disconnectWallet() {
-    if (!walletConnect) return;
+    const wc = walletConnect;
+    if (!wc) return;
     try {
-      await walletConnect.disconnect();
+      await wc.disconnect();
       setWalletAddress('');
       setWalletBalance(0);
       setWalletVehicle(null);
