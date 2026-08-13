@@ -210,22 +210,28 @@ def _extract_onchain_transfer(
     }
 
 
+import time
+
+
 def _get_transaction_info(
     algod: AlgodClient,
     tx_id: str,
 ) -> dict[str, Any] | None:
     """
-    Get the actual transaction from Algorand TestNet via algod.
+    Get the actual transaction from Algorand TestNet via algod with retry.
     """
-    try:
-        info = algod.pending_transaction_info(tx_id)
-        if info:
-            return info
-    except Exception as exc:
-        logger.warning(
-            "pending_transaction_info lookup failed",
-            extra={"txid": tx_id, "error": str(exc)},
-        )
+    for attempt in range(5):
+        try:
+            info = algod.pending_transaction_info(tx_id)
+            if info:
+                return info
+        except Exception as exc:
+            logger.warning(
+                f"pending_transaction_info lookup attempt {attempt + 1} failed",
+                extra={"txid": tx_id, "error": str(exc)},
+            )
+        if attempt < 4:
+            time.sleep(1.5)
 
     return None
 
@@ -242,15 +248,15 @@ def asset_transfer_matches_expected(
 
     actual = _get_asset_transfer(transfer)
 
-    actual_sender = actual.get("sender")
-    actual_receiver = actual.get("receiver")
+    actual_sender = str(actual.get("sender") or "").strip().upper()
+    actual_receiver = str(actual.get("receiver") or "").strip().upper()
     actual_asset_id = actual.get("asset_id")
     actual_amount = actual.get("amount")
 
-    if actual_sender != sender:
+    if actual_sender != sender.strip().upper():
         return False
 
-    if actual_receiver != receiver:
+    if actual_receiver != receiver.strip().upper():
         return False
 
     try:
@@ -324,7 +330,7 @@ def verify_payment(
     )
 
     # Never accept an arbitrary asset or receiver from the client.
-    if expected_receiver != SETTLEMENT_AUTHORITY:
+    if str(expected_receiver or "").strip().upper() != SETTLEMENT_AUTHORITY.strip().upper():
         logger.warning("Payment verification failed: receiver mismatch")
         return False
 
@@ -423,7 +429,7 @@ def verify_payment(
             return False
 
         # Sender
-        if onchain_sender != expected_sender:
+        if str(onchain_sender).strip().upper() != str(expected_sender).strip().upper():
             logger.warning(
                 "On-chain sender mismatch",
                 extra={"txid": tx_id},
@@ -431,7 +437,7 @@ def verify_payment(
             return False
 
         # Receiver
-        if onchain_receiver != SETTLEMENT_AUTHORITY:
+        if str(onchain_receiver).strip().upper() != SETTLEMENT_AUTHORITY.strip().upper():
             logger.warning(
                 "On-chain settlement receiver mismatch",
                 extra={"txid": tx_id},
