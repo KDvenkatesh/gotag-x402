@@ -7,7 +7,11 @@ import algosdk from 'algosdk';
 
 const API_BASE = (
   import.meta.env.VITE_API_BASE_URL ||
-  'http://127.0.0.1:8001'
+  (typeof window !== 'undefined' &&
+  window.location.hostname !== 'localhost' &&
+  window.location.hostname !== '127.0.0.1'
+    ? 'https://gotag-x402-api.vercel.app'
+    : 'http://127.0.0.1:8001')
 ).replace(/\/$/, '');
 
 const ALGOD_SERVER = (
