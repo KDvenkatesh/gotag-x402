@@ -437,14 +437,14 @@ Test coverage includes:
 
 # 📸 Screenshots
 
-Add screenshots before submission:
+<img width="1917" height="865" alt="image" src="https://github.com/user-attachments/assets/05c0e697-42af-480e-932e-4759367e0667" />
+<img width="1916" height="867" alt="image" src="https://github.com/user-attachments/assets/7f80ad02-8412-4700-a341-7e5f9715022b" />
+<img width="1917" height="852" alt="image" src="https://github.com/user-attachments/assets/0a026868-5b31-4072-831c-1b2918fdd5c4" />
+<img width="717" height="682" alt="image" src="https://github.com/user-attachments/assets/a7390deb-ec5a-4768-9213-f76b83fd14ce" />
 
-```text
-/screenshots/dashboard.png
-/screenshots/vehicle-registration.png
-/screenshots/payment-flow.png
-/screenshots/transaction-history.png
-```
+
+
+
 
 ---
 
